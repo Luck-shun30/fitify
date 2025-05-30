@@ -1,0 +1,120 @@
+{
+  "items": [
+    {
+      "id": "sweater1",
+      "type": "sweater",
+      "form": "knitted",
+      "weather": [
+        "cold"
+      ],
+      "color": "white",
+      "notes": "Short sleeves, button-down front, textured knit pattern",
+      "count": 1,
+      "image": "wardrobe/sweater1_20250530_061622.png"
+    },
+    {
+      "id": "tshirt1",
+      "type": "t-shirt",
+      "form": "cotton",
+      "weather": [
+        "warm",
+        "hot"
+      ],
+      "color": "olive green",
+      "notes": "Basic crew neck t-shirt with short sleeves.",
+      "count": 1,
+      "image": "wardrobe/tshirt1_20250530_061624.png"
+    },
+    {
+      "id": "tshirt2",
+      "type": "t-shirt",
+      "form": "cotton",
+      "weather": [
+        "warm",
+        "hot"
+      ],
+      "color": "black",
+      "notes": "Basic black cotton t-shirt with short sleeves.",
+      "count": 1,
+      "image": "wardrobe/tshirt2_20250530_061626.png"
+    },
+    {
+      "id": "shirt1",
+      "type": "shirt",
+      "form": "cotton",
+      "weather": [
+        "warm",
+        "hot"
+      ],
+      "color": "white",
+      "notes": "Short-sleeved, button-down collar",
+      "count": 1,
+      "image": "wardrobe/shirt1_20250530_061629.png"
+    },
+    {
+      "id": "pants1",
+      "type": "pants",
+      "form": "denim",
+      "weather": [
+        "warm",
+        "hot"
+      ],
+      "color": "light blue",
+      "notes": "Casual, straight-leg jeans with a light wash.",
+      "count": 1,
+      "image": "wardrobe/pants1_20250530_061632.png"
+    },
+    {
+      "id": "parka1",
+      "type": "parka",
+      "form": "insulated",
+      "weather": [
+        "cold",
+        "snowy"
+      ],
+      "color": "green",
+      "notes": "Features a fur-lined hood and bright orange interior lining.",
+      "count": 1,
+      "image": "wardrobe/parka1_20250530_061635.png"
+    },
+    {
+      "id": "shoes1",
+      "type": "shoes",
+      "form": "leather",
+      "weather": [
+        "warm",
+        "hot"
+      ],
+      "color": "grey and blue",
+      "notes": "High-top sneakers with blue laces and a white sole.",
+      "count": 1,
+      "image": "wardrobe/shoes1_20250530_061640.png"
+    },
+    {
+      "id": "tshirt3",
+      "type": "t-shirt",
+      "form": "cotton",
+      "weather": [
+        "warm",
+        "hot"
+      ],
+      "color": "green",
+      "notes": "Oversized fit with 'Boston' text in contrasting green and yellow",
+      "count": 1,
+      "image": "wardrobe/tshirt3_20250530_062247.jpg"
+    },
+    {
+      "id": "pants2",
+      "type": "pants",
+      "form": "chinos",
+      "weather": [
+        "warm",
+        "hot"
+      ],
+      "color": "khaki",
+      "notes": "Casual, lightweight, and versatile for warm weather.",
+      "count": 1,
+      "image": "wardrobe/pants2_20250530_062426.jpg"
+    }
+  ]
+}
