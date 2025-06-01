@@ -131,7 +131,7 @@ class WeatherAgent:
 
 
 class WardrobeAgent:
-    def __init__(self):
+    def __init__(self, wardrobe_items: List[Dict[str, Any]]):
         self.llm = LLM(
             model="mistral/mistral-large-latest",
             api_key=os.getenv("MISTRAL_API_KEY"),
@@ -147,16 +147,7 @@ class WardrobeAgent:
             verbose=True,
             llm=self.llm
         )
-        with open('data/wardrobe.json', 'r') as f:
-            self.wardrobe_items = json.load(f)
-
-        with open('data/worn.json', 'r') as fName:
-            try:
-                content = fName.read().strip()
-                self.worn = json.loads(content) if content else []
-            except json.JSONDecodeError:
-                print("Warning: data/worn.json is empty or invalid. Initializing with empty list.")
-                self.worn = []
+        self.wardrobe_items = wardrobe_items
 
     def filter(self, context: Dict[str, Any]):
         filter_task = Task(
@@ -419,36 +410,39 @@ class OutfitGeneratorAgent:
     def generate_outfit(self, context: Dict[str, Any], available_items: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Generate outfit suggestions based on context and available items."""
         outfit_task = Task(
-        description=f"""You must have atleast one top (shirt/tshirt), bottom (pants/shorts), and shoes. Generate outfit suggestions based on the following context:
-            Weather: {context.get('weather', {})}
-            Formality: {context.get('formality', 'casual')}
-            Activity: {context.get('activity', 'general')}
+        description=f"""You must create an outfit that includes EXACTLY one top, one bottom, and one shoe. This is a strict requirement.
+        If there are no bottoms (pants/shorts) in the available items, you MUST find one from the worn items.
+        The outfit must be complete with all three components.
+        IMPORTANT: You can ONLY use items that are listed in the Available Items below. Do not suggest items that are not in this list.
+        Each item_id in your response MUST match exactly with an id from the Available Items list.
 
-            Available Items:
-            {json.dumps(available_items, indent=2)}
+        Weather: {context.get('weather', {})}
+        Formality: {context.get('formality', 'casual')}
+        Activity: {context.get('activity', 'general')}
 
-            Return outfit suggestions in JSON format:
-            {{
-                "outfits": [
-                    {{
-                        "name": "outfit_name",
-                        "items":
-                            [
-                                "item_id1",
-                                "item_id2",
-                                "item_id3",
-                                "item_idn"
-                            ],
-                        "style_notes": "style_notes",
-                        "weather_compatibility": "weather_compatibility",
-                        "formality_level": "formality_level"
-                    }}
-                ],
-                "recommendations": [
-                    "recommendation1",
-                    "recommendation2"
-                ]
-            }}""",           
+        Available Items:
+        {json.dumps(available_items, indent=2)}
+
+        Return outfit suggestions in JSON format:
+        {{
+            "outfits": [
+                {{
+                    "name": "outfit_name",
+                    "items": [
+                        "item_id1",  # Must be a top from Available Items
+                        "item_id2",  # Must be a bottom from Available Items
+                        "item_id3"   # Must be a shoe from Available Items
+                    ],
+                    "style_notes": "style_notes",
+                    "weather_compatibility": "weather_compatibility",
+                    "formality_level": "formality_level"
+                }}
+            ],
+            "recommendations": [
+                "recommendation1",
+                "recommendation2"
+            ]
+        }}""",           
             agent=self.agent,
             expected_output="JSON formatted outfit suggestions with recommendations."
         )
@@ -495,8 +489,7 @@ class OutfitGeneratorAgent:
                         "items": [
                             "item_id1",
                             "item_id2",
-                            "item_id3",
-                            "item_idn"
+                            "item_id3"
                         ],
                         "style_notes": "Basic casual outfit",
                         "weather_compatibility": "Suitable for mild weather",
@@ -512,9 +505,9 @@ class OutfitGeneratorAgent:
         
 
 class OutfitSuggestionCrew:
-    def __init__(self):
+    def __init__(self, wardrobe_items: List[Dict[str, Any]]):
         self.weather_agent = WeatherAgent()
-        self.wardrobe_agent = WardrobeAgent()
+        self.wardrobe_agent = WardrobeAgent(wardrobe_items)
         self.outfit_generator = OutfitGeneratorAgent()
         
         # Initialize calendar manager

@@ -1,7 +1,7 @@
 {
   "items": [
     {
-      "id": "sweater1",
+      "id": "top1",
       "type": "sweater",
       "form": "knitted",
       "weather": [
@@ -13,7 +13,7 @@
       "image": "wardrobe/sweater1_20250530_061622.png"
     },
     {
-      "id": "tshirt1",
+      "id": "top2",
       "type": "t-shirt",
       "form": "cotton",
       "weather": [
@@ -26,7 +26,7 @@
       "image": "wardrobe/tshirt1_20250530_061624.png"
     },
     {
-      "id": "tshirt2",
+      "id": "top3",
       "type": "t-shirt",
       "form": "cotton",
       "weather": [
@@ -39,7 +39,7 @@
       "image": "wardrobe/tshirt2_20250530_061626.png"
     },
     {
-      "id": "shirt1",
+      "id": "top4",
       "type": "shirt",
       "form": "cotton",
       "weather": [
@@ -52,7 +52,7 @@
       "image": "wardrobe/shirt1_20250530_061629.png"
     },
     {
-      "id": "pants1",
+      "id": "bottom1",
       "type": "pants",
       "form": "denim",
       "weather": [
@@ -65,7 +65,7 @@
       "image": "wardrobe/pants1_20250530_061632.png"
     },
     {
-      "id": "parka1",
+      "id": "top5",
       "type": "parka",
       "form": "insulated",
       "weather": [
@@ -78,7 +78,7 @@
       "image": "wardrobe/parka1_20250530_061635.png"
     },
     {
-      "id": "shoes1",
+      "id": "shoe1",
       "type": "shoes",
       "form": "leather",
       "weather": [
@@ -91,7 +91,7 @@
       "image": "wardrobe/shoes1_20250530_061640.png"
     },
     {
-      "id": "tshirt3",
+      "id": "top6",
       "type": "t-shirt",
       "form": "cotton",
       "weather": [
@@ -104,7 +104,7 @@
       "image": "wardrobe/tshirt3_20250530_062247.jpg"
     },
     {
-      "id": "pants2",
+      "id": "bottom2",
       "type": "pants",
       "form": "chinos",
       "weather": [

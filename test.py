@@ -2,20 +2,31 @@ from src.Wardrobe import OutfitSuggestionCrew
 from tools.laundry_manager import filter_wardrobe_items, increment_laundry_count
 from tools.db_manager import remove_item, add_item
 import json
+from typing import Dict, Any
+import requests
+from datetime import datetime
+
+BASE_URL = "http://127.0.0.1:8000"
+
+def save_state(wardrobe: Dict[str, Any], worn: Dict[str, Any]):
+    """Save the current state of wardrobe and worn items to their respective JSON files."""
+    with open("data/wardrobe.json", "w") as f:
+        json.dump(wardrobe, f, indent=2)
+    with open("data/worn.json", "w") as f:
+        json.dump(worn, f, indent=2)
 
 def main():
-    outfit_suggestion = OutfitSuggestionCrew()
+    # Load wardrobe items
+    with open("data/wardrobe.json", "r") as f:
+        wardrobe = json.load(f)
+    
+    # Initialize OutfitSuggestionCrew with the loaded items
+    outfit_suggestion = OutfitSuggestionCrew(wardrobe["items"])
 
     run = input("Enter to get outfit suggestions: ").strip().lower()
 
     while run != "quit":
-        with open("data/wardrobe.json", "r") as f:
-            wardrobe = json.load(f)
-        with open("data/worn.json", "r") as f:
-            worn = json.load(f)
-        
-        increment_laundry_count() 
-        suggestions = outfit_suggestion.suggest_outfit(available_items=filter_wardrobe_items())
+        suggestions = outfit_suggestion.suggest_outfit(available_items=wardrobe["items"])
 
         print("Outfit Suggestions:")
         # Load wardrobe items
@@ -33,113 +44,112 @@ def main():
                 outfit.append(item)
                 # Only remove if "shoe" not in id
                 if "shoe" not in item:
-                    remove_item(item)
-
-            # Prepare items to add
-            items_to_add = []
-            for item_id in outfit:
-                if "shoe" not in item_id:
-                    item = next((i for i in wardrobe["items"] if i["id"] == item_id), None)
-                    if item:
-                        item_copy = item.copy()
-                        item_copy["count"] = 0
-                        items_to_add.append(item_copy)
-                        print(item_copy)
-            # Add all at once
-            worn["laundry"].extend(items_to_add)
-            with open("data/worn.json", "w") as f:
-                json.dump(worn, f, indent=2)
-
-        elif thought == "no":
-            print("Sorry to hear that. Let's try again.")
-            choice = input("Which item would you like to shuffle? (1/2/3/Enter): ").strip().lower()
-            
-            # Get current items from the outfit
-            current_tops = []
-            current_bottoms = []
-            current_shoes = []
-            
-            for item in suggestions["suggestions"]["outfits"][0].get("items", []):
-                item_data = next((i for i in wardrobe["items"] if i["id"] == item), None)
-                if item_data:
-                    if "tshirt" in item or "shirt" in item:
-                        current_tops.append(item_data)
-                    elif "pants" in item or "shorts" in item:
-                        current_bottoms.append(item_data)
-                    elif "shoes" in item:
-                        current_shoes.append(item_data)
-            
-            if choice == "1":
-                new_suggestions = outfit_suggestion.suggest_tops(
-                    available_items=filter_wardrobe_items(),
-                    current_bottoms=current_bottoms,
-                    current_shoes=current_shoes
-                )
-                # Update the outfit with new tops while keeping original bottoms and shoes
-                original_bottoms = [item for item in suggestions["suggestions"]["outfits"][0]["items"] if "pants" in item or "shorts" in item]
-                original_shoes = [item for item in suggestions["suggestions"]["outfits"][0]["items"] if "shoe" in item]
-                suggestions["suggestions"]["outfits"][0]["items"] = [
-                    item["item_id"] for item in new_suggestions["suggestions"]["tops"]
-                ] + original_bottoms + original_shoes
-                
-            elif choice == "2":
-                new_suggestions = outfit_suggestion.suggest_bottoms(
-                    available_items=filter_wardrobe_items(),
-                    current_tops=current_tops,
-                    current_shoes=current_shoes
-                )
-                # Update the outfit with new bottoms while keeping original tops and shoes
-                original_tops = [item for item in suggestions["suggestions"]["outfits"][0]["items"] if "tshirt" in item or "shirt" in item]
-                original_shoes = [item for item in suggestions["suggestions"]["outfits"][0]["items"] if "shoe" in item]
-                suggestions["suggestions"]["outfits"][0]["items"] = original_tops + [
-                    item["item_id"] for item in new_suggestions["suggestions"]["bottoms"]
-                ] + original_shoes
-                
-            elif choice == "3":
-                new_suggestions = outfit_suggestion.suggest_shoes(
-                    available_items=filter_wardrobe_items(),
-                    current_tops=current_tops,
-                    current_bottoms=current_bottoms
-                )
-                # Update the outfit with new shoes while keeping original tops and bottoms
-                original_tops = [item for item in suggestions["suggestions"]["outfits"][0]["items"] if "tshirt" in item or "shirt" in item]
-                original_bottoms = [item for item in suggestions["suggestions"]["outfits"][0]["items"] if "pants" in item or "shorts" in item]
-                suggestions["suggestions"]["outfits"][0]["items"] = original_tops + original_bottoms + [
-                    item["item_id"] for item in new_suggestions["suggestions"]["shoes"]
-                ]
-
-            # Show the updated outfit
-            print("\nUpdated Outfit:")
-            for item_id in suggestions["suggestions"]["outfits"][0].get("items", []):
-                print(f"{item_id}: {id_to_notes.get(item_id, 'Unknown item')}")
-
-            # Ask if they like the new suggestion
-            thought = input("Do you like this updated outfit? (yes/no): ").strip().lower()
-            if thought == "yes":
-                print("Great! The outfit has been updated.")
-                outfit = []
-                for item in suggestions["suggestions"]["outfits"][0].get("items", []):
-                    outfit.append(item)
-                    # Only remove if "shoe" not in id
-                    if "shoe" not in item:
-                        remove_item(item)
-
-                # Prepare items to add
-                items_to_add = []
-                for item_id in outfit:
-                    if "shoe" not in item_id:
-                        item = next((i for i in wardrobe["items"] if i["id"] == item_id), None)
-                        if item:
-                            item_copy = item.copy()
-                            item_copy["count"] = 0
-                            items_to_add.append(item_copy)
-                            print(item_copy)
-                # Add all at once
-                worn["laundry"].extend(items_to_add)
-                with open("data/worn.json", "w") as f:
-                    json.dump(worn, f, indent=2)
+                    # Remove the item from wardrobe
+                    wardrobe["items"] = [i for i in wardrobe["items"] if i["id"] != item]
 
         run = input("Enter to get outfit suggestions: ").strip().lower()
 
+def test_get_outfit_suggestion():
+    """Test getting an outfit suggestion"""
+    # Load wardrobe items
+    with open("data/wardrobe.json", "r") as f:
+        wardrobe = json.load(f)
+    
+    # Test with default parameters
+    response = requests.get(f"{BASE_URL}/suggest_outfit")
+    assert response.status_code == 200
+    data = response.json()
+    assert "outfits" in data
+    assert "weather" in data
+    assert "recommendations" in data
+    
+    # Test with custom parameters
+    params = {
+        "location": "New York, US",
+        "formality": "Formal",
+        "activity": "Work",
+        "available_items": json.dumps(wardrobe["items"])
+    }
+    response = requests.get(f"{BASE_URL}/suggest_outfit", params=params)
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["outfits"]) > 0
+
+def test_log_outfit():
+    """Test logging an outfit"""
+    outfit_log = {
+        "outfit_id": "test_outfit_1",
+        "items": ["top1", "bottom1", "shoe1"],
+        "date_worn": datetime.now().isoformat(),
+        "weather": {
+            "temperature": 72,
+            "conditions": "sunny"
+        },
+        "activity": "Work",
+        "formality": "Casual",
+        "notes": "Test outfit log"
+    }
+    
+    response = requests.post(f"{BASE_URL}/log_outfit", json=outfit_log)
+    assert response.status_code == 200
+    assert response.json()["status"] == "success"
+
+def test_get_outfit_history():
+    """Test getting outfit history"""
+    response = requests.get(f"{BASE_URL}/outfit_history")
+    assert response.status_code == 200
+    data = response.json()
+    assert "history" in data
+
+def test_add_item():
+    """Test adding a new clothing item"""
+    new_item = {
+        "id": "test_item_1",
+        "type": "t-shirt",
+        "form": "cotton",
+        "weather": ["warm", "hot"],
+        "color": "blue",
+        "notes": "Test item",
+        "image": "test_image.jpg"
+    }
+    
+    response = requests.post(f"{BASE_URL}/add_item", json=new_item)
+    assert response.status_code == 200
+    assert response.json()["status"] == "success"
+
+def test_remove_item():
+    """Test removing a clothing item"""
+    item_id = "test_item_1"
+    response = requests.delete(f"{BASE_URL}/remove_item/{item_id}")
+    assert response.status_code == 200
+    assert response.json()["status"] == "success"
+
+def test_get_wardrobe():
+    """Test getting all wardrobe items"""
+    response = requests.get(f"{BASE_URL}/wardrobe")
+    assert response.status_code == 200
+    data = response.json()
+    assert "items" in data
+
+def run_all_tests():
+    """Run all tests"""
+    print("Running tests...")
+    
+    print("\nTesting outfit suggestion...")
+    test_get_outfit_suggestion()
+    
+    print("\nTesting outfit logging...")
+    test_log_outfit()
+    
+    print("\nTesting outfit history...")
+    test_get_outfit_history()
+    
+    print("\nTesting wardrobe management...")
+    test_add_item()
+    test_get_wardrobe()
+    test_remove_item()
+    
+    print("\nAll tests completed successfully!")
+
 if __name__ == "__main__":
-    main()
+    run_all_tests()
