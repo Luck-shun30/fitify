@@ -78,19 +78,6 @@
       "image": "wardrobe/parka1_20250530_061635.png"
     },
     {
-      "id": "shoe1",
-      "type": "shoes",
-      "form": "leather",
-      "weather": [
-        "warm",
-        "hot"
-      ],
-      "color": "grey and blue",
-      "notes": "High-top sneakers with blue laces and a white sole.",
-      "count": 1,
-      "image": "wardrobe/shoes1_20250530_061640.png"
-    },
-    {
       "id": "top6",
       "type": "t-shirt",
       "form": "cotton",
@@ -115,6 +102,58 @@
       "notes": "Casual, lightweight, and versatile for warm weather.",
       "count": 1,
       "image": "wardrobe/pants2_20250530_062426.jpg"
+    },
+    {
+      "id": "shoe1",
+      "type": "shoes",
+      "form": "leather",
+      "weather": [
+        "warm",
+        "hot"
+      ],
+      "color": "white and black",
+      "notes": "High-top sneakers with black and white color scheme, featuring the iconic Nike swoosh and Air Jordan branding.",
+      "count": 1,
+      "image": "wardrobe/shoe1_20250621_114636.png"
+    },
+    {
+      "id": "shoe1_2",
+      "type": "shoes",
+      "form": "leather",
+      "weather": [
+        "warm",
+        "hot"
+      ],
+      "color": "blue",
+      "notes": "Casual boat shoes with white sole and laces.",
+      "count": 1,
+      "image": "wardrobe/shoe1_20250621_114701.png"
+    },
+    {
+      "id": "bottom3",
+      "type": "shorts",
+      "form": "nylon",
+      "weather": [
+        "warm",
+        "hot"
+      ],
+      "color": "black",
+      "notes": "Drawstring waist, small logo on the side.",
+      "count": 1,
+      "image": "wardrobe/shorts1_20250621_121949.png"
+    },
+    {
+      "id": "bottom4",
+      "type": "pants",
+      "form": "cargo",
+      "weather": [
+        "warm",
+        "hot"
+      ],
+      "color": "olive green",
+      "notes": "Multi-pocket design, suitable for casual and outdoor activities.",
+      "count": 1,
+      "image": "wardrobe/pants1_20250621_122024.png"
     }
   ]
 }
