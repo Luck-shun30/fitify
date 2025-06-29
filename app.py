@@ -36,3 +36,22 @@ if 'wardrobe_items' not in st.session_state:
 if 'outfit_history' not in st.session_state:
     st.session_state.outfit_history = []
 
+def save_user_settings():
+    """Save user settings to a JSON file"""
+    with open("data/user_settings.json", "w") as f:
+        json.dump(st.session_state.user_settings, f, indent=2)
+
+def load_user_settings():
+    """Load user settings from JSON file"""
+    try:
+        with open("data/user_settings.json", "r") as f:
+            st.session_state.user_settings = json.load(f)
+    except FileNotFoundError:
+        pass
+
+def save_wardrobe():
+    """Save wardrobe items to JSON file"""
+    wardrobe_data = {"items": st.session_state.wardrobe_items}
+    with open("data/wardrobe.json", "w") as f:
+        json.dump(wardrobe_data, f, indent=2)
+
