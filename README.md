@@ -14,7 +14,7 @@ An AI-powered wardrobe management and outfit suggestion app built with Streamlit
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/Luck-shun30/fitify
 cd shipwrecked_outfit_suggestion
 ```
 
