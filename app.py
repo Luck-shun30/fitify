@@ -733,3 +733,30 @@ def outfit_history_page():
                     st.write(f"**Formality:** {outfit['formality']}")
                     if outfit.get('notes'):
                         st.write(f"**Notes:** {outfit['notes']}")
+
+# Main navigation
+def main():
+    # Sidebar navigation
+    st.sidebar.title("👕 Shipwrecked")
+    st.sidebar.write("Your AI-powered wardrobe assistant")
+    
+    # Navigation
+    page = st.sidebar.selectbox(
+        "Navigate",
+        ["🏠 Dashboard", "👕 Wardrobe", "🎨 Outfit Generator", "📅 History", "⚙️ Settings"]
+    )
+    
+    # Display selected page
+    if page == "🏠 Dashboard":
+        main_page()
+    elif page == "👕 Wardrobe":
+        wardrobe_page()
+    elif page == "🎨 Outfit Generator":
+        outfit_generator_page()
+    elif page == "📅 History":
+        outfit_history_page()
+    elif page == "⚙️ Settings":
+        settings_page()
+
+if __name__ == "__main__":
+    main()
